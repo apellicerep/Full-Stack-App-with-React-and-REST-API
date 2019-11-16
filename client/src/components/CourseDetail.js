@@ -8,35 +8,32 @@ function ButtonsCRUD({ id, context, history, ...props }) {
     const authenticatedUser = context.authenticatedUser
     //console.log(history)
 
-    const handleDelete = () => {
+
+    const handleDelete = async () => {
 
         if (authenticatedUser) {
-            // console.log("buuuuu")
-            // return (
-            //     <Redirect to={{
-            //         pathname: '/signin',
-            //         state: { from: props.location }
-            //     }}
-            //     />)
 
-            context.data.api(`/courses/${id}`,
+            const response = await context.data.api(`/courses/${id}`,
                 'DELETE',
                 null,
                 true,
                 {
                     username: authenticatedUser.email,
                     password: authenticatedUser.password
-                }).then(() => {
-                    history.push(`/`);
-                }).catch(err => { console.log(err) });
+                })
+            console.log(response)
+            if (response.status === 204) {
+                history.push('/')
 
+            } else {
+                history.push('/forbidden')
+            }
         } else {
             const location = {
                 pathname: '/signin',
-                state: { from: '/' }
+                state: { from: `/courses/${id}` }
             }
             history.push(location)
-
         }
     }
 
@@ -47,8 +44,8 @@ function ButtonsCRUD({ id, context, history, ...props }) {
                     <span>
                         <>
                             {/* <Link to={`/courses/${id}/update`}> */}
-                            <Link to={`/courses/${id}/update`}><div className="button"  >Update Course </div>
-                                <div className="button" onClick={handleDelete}>Delete Course</div></Link>
+                            <Link to={`/courses/${id}/update`}><div className="button"  >Update Course </div></Link>
+                            <div className="button" onClick={handleDelete}>Delete Course</div>
                         </>
                     </span>
                     <Link to='/'><div className="button button-secondary">Return to List</div></Link>
@@ -98,7 +95,7 @@ export default function CourseDetail({ match, context, history }) {
     return (
         <>
             <ButtonsCRUD id={courseIdParam} context={context} history={history} />
-            {(loading) ? <h1>Loading</h1> :
+            {(loading) ? <h1></h1> :
                 <div className="bounds course--detail">
                     <div className="grid-66">
                         <div className="course--header">
