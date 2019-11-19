@@ -18,7 +18,7 @@ function CourseItem({ title, id }) {
 }
 
 
-export default function Courses() {
+export default function Courses({ history }) {
     //let [loading, setLoading] = useState(true)
     let [{ loading, courses }, setCourses] = useState({ loading: true, courses: [] })
 
@@ -35,7 +35,10 @@ export default function Courses() {
                 setCourses({ loading: false, courses: data.courses })
                 //setLoading(loading = false)
 
-            })
+            }).catch((error) => {
+                console.error(error);
+                history.push('/error');
+            });
     }, [])
 
     //useEffect nos permite replicar 3 lifecycle methods: 1.componentDidMount(), 2.componentDidUpdate, 3.componentWillMount

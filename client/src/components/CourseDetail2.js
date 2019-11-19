@@ -4,7 +4,7 @@ import { Route, Link, Redirect } from 'react-router-dom'
 
 
 //Component actions buttons
-function ButtonsCRUD({ id, context, history, ...props }) {
+function ButtonsCRUD({ id, context, history }) {
     const authenticatedUser = context.authenticatedUser
     //console.log(history)
 
@@ -63,12 +63,14 @@ export default function CourseDetail({ match, context, history }) {
 
     useEffect(() => {
         fetch(`http://localhost:5000/api/courses/${courseIdParam}`) //pedimos api por los detalles de la peli sacamos el id con el router que nos lo pasa por props.
-            .then((response) => response.json()
-                .then((data) => {
-                    setCourse({ loading: false, course: data.courseId }) //actualizamos el state.
+            .then((response) => response.json())
+            .then((data) => {
+                setCourse({ loading: false, course: data.courseId }) //actualizamos el state.
 
-                })
-            )
+            }).catch((error) => {
+                console.error(error);
+                history.push('/error');
+            });
     }, [])
 
     //Function to create List from *Materials

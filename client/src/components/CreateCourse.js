@@ -41,14 +41,17 @@ export default function CourseUpdate({ match, context, history }) {
                     history.push(location) //redirecciono al curso que acabo de crear
                 }
 
-                return response.json()
+                return response.json()//devuelvo promise
             })
             .then((data) => {
                 if (data.message) {
                     setErrors(errors = data.message)
                 }
                 // history.push('/courses/')
-            }).catch(err => { });
+            }).catch((error) => {
+                console.error(error);
+                history.push('/error');
+            });
 
     }
 

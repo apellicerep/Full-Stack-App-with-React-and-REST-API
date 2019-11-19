@@ -21,21 +21,26 @@ export default function CourseUpdate({ match, context, history }) {
         const body = { linkUpdate: true } //añado esta propiedad para que la api sepa que vengo de este link y on quiero mostrar el 
         //CourseUpdate
         console.log("llama a Put")
-        const response = await context.data.api(`/courses/${courseIdParam}`,
-            'PUT',
-            body,
-            true,
-            {
-                username: authenticatedUser.email,
-                password: authenticatedUser.password
+        try {
+            const response = await context.data.api(`/courses/${courseIdParam}`,
+                'PUT',
+                body,
+                true,
+                {
+                    username: authenticatedUser.email,
+                    password: authenticatedUser.password
 
-            })
-        if (response.status === 200) {
-            //history.push(`/courses/${courseIdParam}/update`)
-            fetchCourseId() //si el curso le pertenece cargaré los datos del libro. sino le redireccionaré a forbiden.
+                })
+            if (response.status === 200) {
+                //history.push(`/courses/${courseIdParam}/update`)
+                fetchCourseId() //si el curso le pertenece cargaré los datos del libro. sino le redireccionaré a forbiden.
 
-        } else {
-            history.push('/forbidden') //redirecciona a Forbiden
+            } else {
+                history.push('/forbidden') //redirecciona a Forbiden
+            }
+        } catch (e) {
+            console.error(e)
+            history.push('/error');
         }
     }
 
@@ -57,22 +62,26 @@ export default function CourseUpdate({ match, context, history }) {
             materialsNeeded: course.materialsNeeded
         }
         console.log(authenticatedUser.email)
+        try {
+            const response = await context.data.api(`/courses/${courseIdParam}`,
+                'PUT',
+                body,
+                true,
+                {
+                    username: authenticatedUser.email,
+                    password: authenticatedUser.password
 
-        const response = await context.data.api(`/courses/${courseIdParam}`,
-            'PUT',
-            body,
-            true,
-            {
-                username: authenticatedUser.email,
-                password: authenticatedUser.password
+                })
 
-            })
-
-        if (response.status === 400) {
-            const data = await response.json()
-            setErrors(errors = data.message)
-        } else {
-            history.push(`/courses/${courseIdParam}`); //una vez actualizado el libro redirecciono a los detalles.
+            if (response.status === 400) {
+                const data = await response.json()
+                setErrors(errors = data.message)
+            } else {
+                history.push(`/courses/${courseIdParam}`); //una vez actualizado el libro redirecciono a los detalles.
+            }
+        } catch (e) {
+            console.error(e)
+            history.push('/error');
         }
 
     }
@@ -84,12 +93,18 @@ export default function CourseUpdate({ match, context, history }) {
             null,
             false
         )
-        const data = await response.json()
-        //console.log(data.courseId)
-        const { title, description, estimatedTime, materialsNeeded, User: { firstName, lastName } } = data.courseId //destructuring info api.
-        setCourse({ title, description, estimatedTime, materialsNeeded, firstName, lastName })
-        setLoading(false)
+        try {
+            const data = await response.json()
+            //console.log(data.courseId)
+            const { title, description, estimatedTime, materialsNeeded, User: { firstName, lastName } } = data.courseId //destructuring info api.
+            setCourse({ title, description, estimatedTime, materialsNeeded, firstName, lastName })
+            setLoading(false)
+        } catch (e) {
+            console.error(e)
+            history.push('/error');
+        }
     }
+
 
     useEffect(() => {
         handleUpdate2()
