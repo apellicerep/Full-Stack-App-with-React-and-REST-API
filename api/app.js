@@ -33,7 +33,10 @@ var coursesRouter = require('./routes/api/courses');
 
 
 // Enable all CORS Requests
-app.use(cors());
+app.use(cors({
+  exposedHeaders: ['location'] //expongo la cabecera location para que cuando responda en una de mis rutas con location el front end pueda coger esa direccion por ejemplo
+  //para poder redireccionarlo.
+}));
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));

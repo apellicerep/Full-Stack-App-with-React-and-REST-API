@@ -4,14 +4,14 @@ import Form from './Form';
 
 export default class UserSignIn extends Component {
   state = {
-    username: '',
+    email: '',
     password: '',
     errors: [],
   }
 
   render() {
     const {
-      username,
+      email,
       password,
       errors,
     } = this.state;
@@ -20,27 +20,27 @@ export default class UserSignIn extends Component {
       <div className="bounds">
         <div className="grid-33 centered signin">
           <h1>Sign In</h1>
-          <Form 
+          <Form
             cancel={this.cancel}
             errors={errors}
             submit={this.submit}
             submitButtonText="Sign In"
             elements={() => (
               <React.Fragment>
-                <input 
-                  id="username" 
-                  name="username" 
+                <input
+                  id="email"
+                  name="email"
                   type="text"
-                  value={username} 
-                  onChange={this.change} 
-                  placeholder="User Name" />
-                <input 
-                  id="password" 
+                  value={email}
+                  onChange={this.change}
+                  placeholder="User Email" />
+                <input
+                  id="password"
                   name="password"
                   type="password"
-                  value={password} 
-                  onChange={this.change} 
-                  placeholder="Password" />                
+                  value={password}
+                  onChange={this.change}
+                  placeholder="Password" />
               </React.Fragment>
             )} />
           <p>
@@ -64,14 +64,16 @@ export default class UserSignIn extends Component {
 
   submit = () => {
     const { context } = this.props;
-    const { from } = this.props.location.state || { from: { pathname: '/authenticated' } };
-    const { username, password } = this.state;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    const { email, password } = this.state;
 
-    context.actions.signIn(username, password)
+    context.actions.signIn(email, password)
       .then((user) => {
-        if (user === null) {
+        //console.log(user)
+        console.log("error", user)
+        if (Array.isArray(user)) { //user representa los errores de validacion del auth.viene de Data.js
           this.setState(() => {
-            return { errors: [ 'Sign-in was unsuccessful' ] };
+            return { errors: user };
           });
         } else {
           this.props.history.push(from);

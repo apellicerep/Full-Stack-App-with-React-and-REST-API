@@ -42,16 +42,20 @@ export class Provider extends Component {
 
   signIn = async (username, password) => {
     const user = await this.data.getUser(username, password);
-    if (user !== null) {
+    if (!Array.isArray(user)) { //if (user !== null) {
       this.setState(() => {
+        console.log(user)
+        user.password = password //añado password al authenticatedUser para poderlo enviar en futuras peticiones a la api.
         return {
+          //user.password = password,
           authenticatedUser: user,
         };
       });
       const cookieOptions = {
         expires: 1 // 1 day
       };
-      Cookies.set('authenticatedUser', JSON.stringify(user), { cookieOptions });
+      console.log(user)
+      Cookies.set('authenticatedUser', JSON.stringify(user), cookieOptions);
     }
     return user;
   }
@@ -81,4 +85,3 @@ export default function withContext(Component) {
     );
   }
 }
-

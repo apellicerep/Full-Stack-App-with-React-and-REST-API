@@ -27,12 +27,13 @@ export default function CourseUpdate({ match, context, history }) {
             true,
             {
                 username: context.authenticatedUser.email,
-                passwords: context.authenticatedUser.password
+                password: context.authenticatedUser.password
             }).then((response) => {
                 if (response.status === 201) {
                     let location;
                     //quiero obtener el location que recibo de la ruta.
                     response.headers.forEach((i, key) => {
+                        console.log(key)
                         if (key === 'location') {
                             location = i;
                         }

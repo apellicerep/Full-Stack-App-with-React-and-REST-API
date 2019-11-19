@@ -7,7 +7,9 @@ import {
 
 import Header from './Components/Header';
 import Courses from './Components/Courses';
-import CourseDetail from './Components/CourseDetail';
+//import CourseDetail from './Components/CourseDetail';
+import CourseDetail2 from './Components/CourseDetail2';
+import CourseUpdate from './Components/CourseUpdate';
 import NotFound from './Components/NotFound';
 import UserSignUp from './Components/UserSignUp';
 import UserSignIn from './Components/UserSignIn';
@@ -15,8 +17,7 @@ import UserSignOut from './Components/UserSignOut';
 import Authenticated from './Components/Authenticated';
 import CreateCourse from './Components/CreateCourse';
 import Forbidden from './Components/Forbidden';
-
-
+import UnhandledError from './Components/UnhandledError'
 
 import withContext from './Context';
 import PrivateRoute from './PrivateRoute';
@@ -29,6 +30,8 @@ const AuthWithContext = withContext(Authenticated);
 const UserSignUpWithContext = withContext(UserSignUp);
 const UserSignInWithContext = withContext(UserSignIn);
 const UserSignOutWithContext = withContext(UserSignOut);
+const CourseUpdateWithContext = withContext(CourseUpdate);
+//const CourseDetailWithContext = withContext(CourseDetail);
 const CourseDetailWithContext = withContext(CourseDetail2); //!!!!cambiado por CourseDetail
 const CreateCourseWithContext = withContext(CreateCourse);
 
@@ -42,6 +45,9 @@ export default () => (
         <Route exact path="/" component={Courses} />
         <PrivateRoute exact path="/courses/create" component={CreateCourseWithContext} />
         <Route exact path="/courses/:id" component={CourseDetailWithContext} />
+        <PrivateRoute exact path="/courses/:id/update" component={CourseUpdateWithContext} />
+        {/* <PrivateRoute exact path="/courses/:id/update" component={CourseUpdate} /> */}
+        <PrivateRoute path="/authenticated" component={AuthWithContext} />
         <Route path="/signin" component={UserSignInWithContext} />
         <Route path="/signup" component={UserSignUpWithContext} />
         <Route path="/signout" component={UserSignOutWithContext} />
