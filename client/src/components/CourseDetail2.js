@@ -42,12 +42,16 @@ function ButtonsCRUD({ id, context, history }) {
             <div className="bounds">
                 <div className="grid-100">
                     <span>
-                        <>
-                            {/* <Link to={`/courses/${id}/update`}> */}
-                            <Link to={`/courses/${id}/update`}><div className="button"  >Update Course </div></Link>
-                            <div className="button" onClick={handleDelete}>Delete Course</div>
-                        </>
+                        {(authenticatedUser) &&
+                            <>
+                                {/* <Link to={`/courses/${id}/update`}> */}
+
+                                <Link to={`/courses/${id}/update`}><div className="button"  >Update Course </div></Link>
+                                <div className="button" onClick={handleDelete}>Delete Course</div>
+                            </>
+                        }
                     </span>
+
                     <Link to='/'><div className="button button-secondary">Return to List</div></Link>
                 </div>
             </div>

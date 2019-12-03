@@ -95,13 +95,20 @@ export default class UserSignUp extends Component {
   }
 
   submit = () => {
+
     const { context } = this.props;
     const {
       firstName,
       lastName,
       emailAddress,
-      password
+      password,
+      confirmPassword
     } = this.state;
+
+    if (password !== confirmPassword) {
+      this.setState({ errors: ['invalid Password confirmation'] })
+      return
+    }
 
     // Create user
     const user = {
@@ -119,7 +126,7 @@ export default class UserSignUp extends Component {
         } else {
           context.actions.signIn(emailAddress, password)
             .then(() => {
-              this.props.history.push('/authenticated');
+              this.props.history.push('/');
             }).catch(err => { console.log(err) });
         }
       })
