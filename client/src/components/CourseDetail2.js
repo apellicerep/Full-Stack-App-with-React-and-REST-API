@@ -4,9 +4,9 @@ import { Route, Link, Redirect } from 'react-router-dom'
 
 
 //Component actions buttons
-function ButtonsCRUD({ id, context, history }) {
+function ButtonsCRUD({ id, context, history, userOfCourse }) {
     const authenticatedUser = context.authenticatedUser
-    //console.log(history)
+    console.log(authenticatedUser)
 
 
     const handleDelete = async () => {
@@ -42,7 +42,8 @@ function ButtonsCRUD({ id, context, history }) {
             <div className="bounds">
                 <div className="grid-100">
                     <span>
-                        {(authenticatedUser) &&
+
+                        {(userOfCourse.emailAddress === authenticatedUser.email) &&
                             <>
                                 {/* <Link to={`/courses/${id}/update`}> */}
 
@@ -62,6 +63,7 @@ function ButtonsCRUD({ id, context, history }) {
 export default function CourseDetail({ match, context, history }) {
     const courseIdParam = match.params.id
     let [{ course, loading }, setCourse] = useState({ loading: true, course: {} })
+    //let [userOfCourse, setUserOfCourse] = useState(null)
     //console.log(loading)
 
 
@@ -69,7 +71,9 @@ export default function CourseDetail({ match, context, history }) {
         fetch(`http://localhost:5000/api/courses/${courseIdParam}`) //pedimos api por los detalles de la peli sacamos el id con el router que nos lo pasa por props.
             .then((response) => response.json())
             .then((data) => {
+                console.log(data)
                 setCourse({ loading: false, course: data.courseId }) //actualizamos el state.
+                //setUserOfCourse(data.User)
 
             }).catch((error) => {
                 console.error(error);
@@ -100,38 +104,41 @@ export default function CourseDetail({ match, context, history }) {
 
     return (
         <>
-            <ButtonsCRUD id={courseIdParam} context={context} history={history} />
+
             {(loading) ? <h1></h1> :
-                <div className="bounds course--detail">
-                    <div className="grid-66">
-                        <div className="course--header">
-                            <h4 className="course--label">Course</h4>
-                            <h3 className="course--title">{course.title}</h3>
-                            <p>{`${course.User.firstName} ${course.User.lastName}`}</p>
-                        </div>
-                        <div className="course--description">
+                <>
+                    <ButtonsCRUD id={courseIdParam} userOfCourse={course.User} context={context} history={history} />
+                    <div className="bounds course--detail">
+                        <div className="grid-66">
+                            <div className="course--header">
+                                <h4 className="course--label">Course</h4>
+                                <h3 className="course--title">{course.title}</h3>
+                                <p>{`${course.User.firstName} ${course.User.lastName}`}</p>
+                            </div>
+                            <div className="course--description">
 
-                            {convertDescription()}
+                                {convertDescription()}
+                            </div>
+                        </div>
+                        <div className="grid-25 grid-right">
+                            <div className="course--stats">
+                                <ul className="course--stats--list">
+                                    <li className="course--stats--list--item">
+                                        <h4>Estimated Time</h4>
+                                        <h3>{course.estimatedTime}</h3>
+                                    </li>
+                                    <li className="course--stats--list--item">
+                                        <h4>Materials Needed</h4>
+                                        <ul>
+                                            {convertMaterialsNeeded()}
+                                        </ul>
+
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div className="grid-25 grid-right">
-                        <div className="course--stats">
-                            <ul className="course--stats--list">
-                                <li className="course--stats--list--item">
-                                    <h4>Estimated Time</h4>
-                                    <h3>{course.estimatedTime}</h3>
-                                </li>
-                                <li className="course--stats--list--item">
-                                    <h4>Materials Needed</h4>
-                                    <ul>
-                                        {convertMaterialsNeeded()}
-                                    </ul>
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>}
+                </>}
         </>
 
     )
