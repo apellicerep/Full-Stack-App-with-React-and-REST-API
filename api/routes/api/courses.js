@@ -58,6 +58,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
         })
 
     } else {
+        console.log("******")
         res.status(404).json({ error: "NotFound" })
     }
 
@@ -97,30 +98,24 @@ router.put('/:id', authHandler, asyncHandler(async (req, res, next) => {
     if (Object.keys(req.body).length == 0) {
         req.body = { title: "", description: "", userId: -1 }
         aux = true
-
     };
-
     try {
-        //course = await Course.findByPk(req.params.id)//busco instancia del curso
         console.log(req.currentUser.id)
-        console.log(req.body)
-        course = await Course.findOne({
-            where: { userId: req.currentUser.id, id: req.params.id }, //elimino solo el curso que le pertenece
-            //el current user lo saco de la cabecera auth.
-
-        })
+        //console.log(req.body)
+        course = await Course.findByPk(req.params.id)
+        // where: { userId: req.currentUser.id, id: req.params.id }, //elimino solo el curso que le pertenece
+        // //el current user lo saco de la cabecera auth.
+        console.log(course)
 
         if (course) {
-            if (!req.body.linkUpdate) { //miro si me viene del "Update Course" link. para que antes de dejarle editar ya no rederize el CourseUpdate
+            if (course.userId === req.currentUser.id) {//miro que se el creador del curso.
                 await course.update(req.body) //actualizo instancia en base de datos a través de su instancia.
                 res.status(204).end()
             } else {
-                res.status(200).end()
+                res.status(403).end()
             }
-
-
         } else {
-            res.status(403).end()
+            res.status(404).end()
         }
     } catch (error) {
         if (error.name === "SequelizeValidationError") {

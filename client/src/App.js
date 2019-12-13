@@ -14,7 +14,7 @@ import NotFound from './Components/NotFound';
 import UserSignUp from './Components/UserSignUp';
 import UserSignIn from './Components/UserSignIn';
 import UserSignOut from './Components/UserSignOut';
-import Authenticated from './Components/Authenticated';
+// import Authenticated from './Components/Authenticated';
 import CreateCourse from './Components/CreateCourse';
 import Forbidden from './Components/Forbidden';
 import UnhandledError from './Components/UnhandledError'
@@ -26,7 +26,7 @@ import PrivateRoute from './PrivateRoute';
 //funciones que necesiten consumir este dato como las llamadas a la api que necesiten la cabecera auth.
 
 const HeaderWithContext = withContext(Header);
-const AuthWithContext = withContext(Authenticated);
+// const AuthWithContext = withContext(Authenticated);
 const UserSignUpWithContext = withContext(UserSignUp);
 const UserSignInWithContext = withContext(UserSignIn);
 const UserSignOutWithContext = withContext(UserSignOut);
@@ -47,7 +47,7 @@ export default () => (
         <Route exact path="/courses/:id" component={CourseDetailWithContext} />
         <PrivateRoute exact path="/courses/:id/update" component={CourseUpdateWithContext} />
         {/* <PrivateRoute exact path="/courses/:id/update" component={CourseUpdate} /> */}
-        <PrivateRoute path="/authenticated" component={AuthWithContext} />
+        {/* <PrivateRoute path="/authenticated" component={AuthWithContext} /> */}
         <Route path="/signin" component={UserSignInWithContext} />
         <Route path="/signup" component={UserSignUpWithContext} />
         <Route path="/signout" component={UserSignOutWithContext} />

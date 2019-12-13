@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Route, Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 
@@ -42,8 +42,8 @@ function ButtonsCRUD({ id, context, history, userOfCourse }) {
             <div className="bounds">
                 <div className="grid-100">
                     <span>
-
-                        {(userOfCourse.emailAddress === authenticatedUser.email) &&
+                        {authenticatedUser &&
+                            (userOfCourse.emailAddress === authenticatedUser.email) &&
                             <>
                                 {/* <Link to={`/courses/${id}/update`}> */}
 
@@ -69,16 +69,23 @@ export default function CourseDetail({ match, context, history }) {
 
     useEffect(() => {
         fetch(`http://localhost:5000/api/courses/${courseIdParam}`) //pedimos api por los detalles de la peli sacamos el id con el router que nos lo pasa por props.
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data)
-                setCourse({ loading: false, course: data.courseId }) //actualizamos el state.
-                //setUserOfCourse(data.User)
+            .then((response) => {
+                console.log(response)
+                if (response.status === 404) { //error 404 no se considera como error en fetch por lo que tienes que code status te ha dade el response.
+                    return history.push('/notFound')
+                } else {
+                    response.json().then((data) => {
+                        console.log(data)
+                        setCourse({ loading: false, course: data.courseId }) //actualizamos el state.
+                        //setUserOfCourse(data.User)
 
-            }).catch((error) => {
-                console.error(error);
-                history.push('/error');
-            });
+                    }).catch((error) => {
+                        console.error(error);
+                        history.push('/error');
+                    });
+                }
+            })
+
     }, [])
 
     //Function to create List from *Materials
@@ -105,7 +112,7 @@ export default function CourseDetail({ match, context, history }) {
     return (
         <>
 
-            {(loading) ? <h1></h1> :
+            {(loading) ? <h1>Loading</h1> :
                 <>
                     <ButtonsCRUD id={courseIdParam} userOfCourse={course.User} context={context} history={history} />
                     <div className="bounds course--detail">

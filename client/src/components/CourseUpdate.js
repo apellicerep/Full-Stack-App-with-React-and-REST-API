@@ -10,39 +10,6 @@ export default function CourseUpdate({ match, context, history }) {
     let [loading, setLoading] = useState(true)
     let [errors, setErrors] = useState(null)
 
-    console.log(context.authenticatedUser.email)
-
-    // if(!context.authenticatedUser){
-    //     history.push(`/courses/${courseIdParam}`);
-    // }
-
-    const handleUpdate2 = async () => {
-
-        const body = { linkUpdate: true } //añado esta propiedad para que la api sepa que vengo de este link y on quiero mostrar el 
-        //CourseUpdate
-        console.log("llama a Put")
-        try {
-            const response = await context.data.api(`/courses/${courseIdParam}`,
-                'PUT',
-                body,
-                true,
-                {
-                    username: authenticatedUser.email,
-                    password: authenticatedUser.password
-
-                })
-            if (response.status === 200) {
-                //history.push(`/courses/${courseIdParam}/update`)
-                fetchCourseId() //si el curso le pertenece cargaré los datos del libro. sino le redireccionaré a forbiden.
-
-            } else {
-                history.push('/forbidden') //redirecciona a Forbiden
-            }
-        } catch (e) {
-            console.error(e)
-            history.push('/error');
-        }
-    }
 
 
     const handleChange = (e) => {
@@ -76,6 +43,8 @@ export default function CourseUpdate({ match, context, history }) {
             if (response.status === 400) {
                 const data = await response.json()
                 setErrors(errors = data.message)
+            } else if (response.status === 404) {
+                history.push('/notFound')
             } else {
                 history.push(`/courses/${courseIdParam}`); //una vez actualizado el libro redirecciono a los detalles.
             }
@@ -95,10 +64,15 @@ export default function CourseUpdate({ match, context, history }) {
         )
         try {
             const data = await response.json()
-            //console.log(data.courseId)
-            const { title, description, estimatedTime, materialsNeeded, User: { firstName, lastName } } = data.courseId //destructuring info api.
-            setCourse({ title, description, estimatedTime, materialsNeeded, firstName, lastName })
-            setLoading(false)
+            console.log(data.courseId.User.emailAddress)
+            if (data.courseId.User.emailAddress === authenticatedUser.email) {
+                const { title, description, estimatedTime, materialsNeeded, User: { firstName, lastName } } = data.courseId //destructuring info api.
+                setCourse({ title, description, estimatedTime, materialsNeeded, firstName, lastName })
+                setLoading(false)
+            } else {
+                history.push('/forbidden')
+            }
+
         } catch (e) {
             console.error(e)
             history.push('/error');
@@ -107,8 +81,7 @@ export default function CourseUpdate({ match, context, history }) {
 
 
     useEffect(() => {
-        handleUpdate2()
-
+        fetchCourseId()
 
     }, [])
 
@@ -117,7 +90,7 @@ export default function CourseUpdate({ match, context, history }) {
     return (
         <div className="bounds course--detail">
 
-            {(loading) ? <h1></h1> :
+            {(loading) ? <h4>Loading</h4> :
                 <>
                     <h1>Update Course</h1>
                     <div>
