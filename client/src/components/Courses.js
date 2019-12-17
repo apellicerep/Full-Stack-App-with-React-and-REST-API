@@ -21,6 +21,7 @@ function CourseItem({ title, id }) {
 export default function Courses({ history }) {
     //let [loading, setLoading] = useState(true)
     let [{ loading, courses }, setCourses] = useState({ loading: true, courses: [] })
+    //let [onlyMount, setOnlyMount] = useState("")
 
 
     //Por cada invocaion del useState se se renderizará el componente y el componente recibe props i estos cambian
@@ -28,7 +29,7 @@ export default function Courses({ history }) {
     //-primer render cuando monta el Componente
     //-cuando hacemos el set de courses 
     //-cuando hacemos el set de loading pero... (HE PUESTO EL LOADING I COURSES EN UN MIMSO STATE así solo se renderiza 2 en vez de 3)
-    useEffect(() => {
+    useEffect((history) => {
         fetch('http://localhost:5000/api/courses')
             .then((response) => response.json())
             .then((data) => {

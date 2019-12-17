@@ -86,7 +86,7 @@ export default function CourseDetail({ match, context, history }) {
                 }
             })
 
-    }, [])
+    }, [courseIdParam, history])
 
     //Function to create List from *Materials
     function convertMaterialsNeeded() {

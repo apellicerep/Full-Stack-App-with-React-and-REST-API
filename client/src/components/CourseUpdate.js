@@ -55,35 +55,58 @@ export default function CourseUpdate({ match, context, history }) {
 
     }
 
-    const fetchCourseId = async () => {
+    // const fetchCourseId = async () => {
 
-        const response = await context.data.api(`/courses/${courseIdParam}`,
-            'GET',
-            null,
-            false
-        )
-        try {
-            const data = await response.json()
-            console.log(data.courseId.User.emailAddress)
-            if (data.courseId.User.emailAddress === authenticatedUser.email) {
-                const { title, description, estimatedTime, materialsNeeded, User: { firstName, lastName } } = data.courseId //destructuring info api.
-                setCourse({ title, description, estimatedTime, materialsNeeded, firstName, lastName })
-                setLoading(false)
-            } else {
-                history.push('/forbidden')
-            }
+    //     const response = await context.data.api(`/courses/${courseIdParam}`,
+    //         'GET',
+    //         null,
+    //         false
+    //     )
+    //     try {
+    //         const data = await response.json()
+    //         console.log(data.courseId.User.emailAddress)
+    //         if (data.courseId.User.emailAddress === authenticatedUser.email) {
+    //             const { title, description, estimatedTime, materialsNeeded, User: { firstName, lastName } } = data.courseId //destructuring info api.
+    //             setCourse({ title, description, estimatedTime, materialsNeeded, firstName, lastName })
+    //             setLoading(false)
+    //         } else {
+    //             history.push('/forbidden')
+    //         }
 
-        } catch (e) {
-            console.error(e)
-            history.push('/error');
-        }
-    }
+    //     } catch (e) {
+    //         console.error(e)
+    //         history.push('/error');
+    //     }
+    // }
 
 
     useEffect(() => {
+        async function fetchCourseId() {
+
+            const response = await context.data.api(`/courses/${courseIdParam}`,
+                'GET',
+                null,
+                false
+            )
+            try {
+                const data = await response.json()
+                console.log(data.courseId.User.emailAddress)
+                if (data.courseId.User.emailAddress === authenticatedUser.email) {
+                    const { title, description, estimatedTime, materialsNeeded, User: { firstName, lastName } } = data.courseId //destructuring info api.
+                    setCourse({ title, description, estimatedTime, materialsNeeded, firstName, lastName })
+                    setLoading(false)
+                } else {
+                    history.push('/forbidden')
+                }
+
+            } catch (e) {
+                console.error(e)
+                history.push('/error');
+            }
+        }
         fetchCourseId()
 
-    }, [])
+    }, [history, authenticatedUser.email, context.data, courseIdParam])
 
 
 
