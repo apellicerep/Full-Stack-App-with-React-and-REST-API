@@ -12,3 +12,5 @@ I've used:
 * React Router to set up your routes.
 * The Fetch API  to fetch data from your REST API.
 * Allow users to sign up and use basic authentication to support users signing in.
+
+![.](https://github.com/apellicerep/Full-Stack-App-with-React-and-REST-API/blob/master/fullstackReactRest.gif)
